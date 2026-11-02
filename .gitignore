@@ -1,0 +1,20 @@
+# credentials — never commit
+.env
+.env.*
+!.env.example
+
+# WHOOP CSV exports (personal data)
+*.csv
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# node / next
+node_modules/
+.next/

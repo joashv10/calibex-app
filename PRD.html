@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CALIBEX — Product Requirements Document</title>
+<style>
+  :root{
+    /* light theme — variable names kept from the dark build; values inverted */
+    --navy-950:#f8f6f1; --navy-900:#ffffff; --navy-850:#edeae2; --navy-800:#f1eee5;
+    --navy-700:#dfe4ee; --navy-line:#ddd8cb;
+    --amber:#b06f06; --amber-soft:#955d08; --amber-bright:#f5a524; --amber-dim:rgba(245,165,36,.14);
+    --ink:#16243d; --ink-soft:#42526e; --ink-faint:#7f8899;
+    --good:#15803d; --warn:#c2410c; --serif:Georgia,'Times New Roman',serif;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;color-scheme:light}
+  body{background:var(--navy-950);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:16px}
+  ::selection{background:var(--amber-bright);color:#16243d}
+
+  .layout{display:grid;grid-template-columns:260px minmax(0,1fr);max-width:1280px;margin:0 auto}
+  @media(max-width:920px){.layout{grid-template-columns:1fr}.toc{display:none}}
+
+  /* TOC */
+  .toc{position:sticky;top:0;height:100vh;overflow-y:auto;padding:48px 28px 48px 32px;border-right:1px solid var(--navy-line)}
+  .toc .brand{font-family:var(--mono);font-size:13px;letter-spacing:.32em;color:var(--amber);margin-bottom:6px}
+  .toc .brand-sub{font-size:11.5px;color:var(--ink-faint);margin-bottom:34px;letter-spacing:.04em}
+  .toc a{display:block;color:var(--ink-faint);text-decoration:none;font-size:13px;padding:5px 0;border-left:2px solid transparent;padding-left:12px;margin-left:-13px;transition:color .15s,border-color .15s}
+  .toc a:hover{color:var(--ink)}
+  .toc a.h{color:var(--ink-soft);font-weight:600;margin-top:14px}
+  .toc a:hover{border-left-color:var(--amber-bright)}
+  .toc a.active{color:var(--amber);border-left-color:var(--amber-bright);font-weight:650}
+  .toc a.active.h{color:var(--amber)}
+
+  main{padding:0 56px 120px;max-width:860px}
+  @media(max-width:920px){main{padding:0 22px 80px}}
+
+  /* Hero */
+  .hero{padding:84px 0 56px;border-bottom:1px solid var(--navy-line)}
+  .doc-tag{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--amber);border:1px solid rgba(176,111,6,.45);background:var(--amber-dim);padding:5px 12px;border-radius:3px;margin-bottom:28px}
+  h1{font-family:var(--serif);font-size:clamp(38px,5.4vw,56px);line-height:1.08;font-weight:400;letter-spacing:-.01em}
+  h1 em{font-style:italic;color:var(--amber-soft)}
+  .hero .thesis{margin-top:26px;font-size:18.5px;color:var(--ink-soft);max-width:620px}
+  .hero .meta{margin-top:36px;display:flex;gap:34px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-faint);font-family:var(--mono)}
+  .hero .meta b{display:block;color:var(--ink-soft);font-weight:600;font-family:var(--sans);font-size:13px;margin-bottom:2px}
+
+  /* Sections */
+  section{padding-top:72px}
+  .kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.26em;color:var(--amber);margin-bottom:12px}
+  h2{font-family:var(--serif);font-size:31px;font-weight:400;margin-bottom:18px;letter-spacing:-.01em}
+  h3{font-size:16px;font-weight:650;margin:34px 0 10px;color:var(--ink)}
+  p{color:var(--ink-soft);margin-bottom:14px;max-width:680px}
+  p strong,li strong{color:var(--ink)}
+  ul,ol{margin:0 0 16px 22px;color:var(--ink-soft)}
+  li{margin-bottom:7px;max-width:660px}
+  .rule{height:1px;background:var(--navy-line);margin-top:70px}
+
+  /* Callouts */
+  .callout{border:1px solid var(--navy-line);border-left:3px solid var(--amber-bright);background:var(--navy-900);box-shadow:0 1px 3px rgba(22,36,61,.05);padding:18px 22px;border-radius:0 6px 6px 0;margin:22px 0;max-width:700px}
+  .callout p{margin:0;font-size:15px}
+  .callout .label{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--amber);display:block;margin-bottom:7px}
+
+  /* Tables */
+  table{width:100%;border-collapse:collapse;margin:18px 0 26px;font-size:14px}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);text-align:left;padding:9px 14px;border-bottom:1px solid var(--navy-line)}
+  td{padding:11px 14px;border-bottom:1px solid var(--navy-850);color:var(--ink-soft);vertical-align:top}
+  tr:hover td{background:rgba(245,165,36,.06)}
+  td:first-child{color:var(--ink);white-space:nowrap}
+  .q td:first-child{font-family:var(--mono);font-size:12.5px;color:var(--amber-soft)}
+
+  /* Pills */
+  .pill{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:2.5px 9px;border-radius:99px;vertical-align:1px}
+  .ship{background:rgba(21,128,61,.09);color:var(--good);border:1px solid rgba(21,128,61,.3)}
+  .defer{background:rgba(127,136,153,.1);color:var(--ink-faint);border:1px solid rgba(127,136,153,.35)}
+  .new{background:var(--amber-dim);color:var(--amber-soft);border:1px solid rgba(176,111,6,.3)}
+  .neg{color:var(--warn)} .prot{color:var(--good)}
+
+  /* Axis cards */
+  .axes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0}
+  @media(max-width:760px){.axes{grid-template-columns:1fr}}
+  .axis{border:1px solid var(--navy-line);background:var(--navy-900);box-shadow:0 1px 3px rgba(22,36,61,.05);border-radius:8px;padding:22px 20px}
+  .axis .ax{font-family:var(--serif);font-size:34px;color:var(--amber-bright);line-height:1}
+  .axis h4{font-size:14.5px;margin:12px 0 4px;color:var(--ink)}
+  .axis .cad{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--ink-faint);text-transform:uppercase}
+  .axis p{font-size:13.5px;margin-top:10px;color:var(--ink-soft)}
+
+  /* Roadmap */
+  .roadmap{margin:26px 0;border-left:2px solid var(--navy-line);padding-left:0;list-style:none}
+  .roadmap li{position:relative;padding:0 0 26px 30px;margin:0;max-width:680px}
+  .roadmap li::before{content:'';position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--navy-950);border:2.5px solid var(--amber-bright)}
+  .roadmap .m{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--amber);display:block;margin-bottom:3px}
+  .roadmap b{color:var(--ink)}
+
+  /* Flow */
+  .flow{display:flex;gap:0;align-items:stretch;margin:24px 0;flex-wrap:wrap}
+  .flow .step{flex:1;min-width:130px;border:1px solid var(--navy-line);background:var(--navy-900);padding:16px 14px;text-align:center}
+  .flow .step:first-child{border-radius:8px 0 0 8px}.flow .step:last-child{border-radius:0 8px 8px 0;border-color:rgba(245,165,36,.45);background:linear-gradient(180deg,var(--navy-900),rgba(245,165,36,.06))}
+  .flow .step+.step{border-left:none}
+  .flow b{display:block;font-size:13.5px;color:var(--ink)}
+  .flow span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--ink-faint);text-transform:uppercase}
+
+  .risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0}
+  @media(max-width:760px){.risk-grid{grid-template-columns:1fr}}
+  .risk{border:1px solid var(--navy-line);background:var(--navy-900);box-shadow:0 1px 3px rgba(22,36,61,.05);border-radius:8px;padding:18px 20px}
+  .risk h4{font-size:14px;color:var(--warn);margin-bottom:6px}
+  .risk p{font-size:13.5px;margin:0}
+  .risk p b{color:var(--good);font-weight:600}
+
+  code{font-family:var(--mono);font-size:13px;background:var(--navy-800);padding:1.5px 7px;border-radius:4px;color:var(--amber-soft)}
+  .foot{margin-top:80px;padding-top:26px;border-top:1px solid var(--navy-line);font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc">
+  <div class="brand">CALIBEX</div>
+  <div class="brand-sub">Product Requirements · v1.0</div>
+  <a href="#vision" class="h">1 · Vision &amp; Thesis</a>
+  <a href="#user" class="h">2 · The User</a>
+  <a href="#goals" class="h">3 · Goals &amp; Non-Goals</a>
+  <a href="#framework" class="h">4 · The Framework</a>
+  <a href="#axes">Three outcome axes</a>
+  <a href="#dimensions">Seven dimensions</a>
+  <a href="#questions" class="h">5 · The Instrument</a>
+  <a href="#touchpoints">Touchpoint map</a>
+  <a href="#mvp" class="h">6 · MVP &amp; Roadmap</a>
+  <a href="#flagship" class="h">7 · Flagship Features</a>
+  <a href="#playbook">The Playbook</a>
+  <a href="#intraday">Intraday biometrics</a>
+  <a href="#scoring" class="h">8 · Scoring Engine (M3)</a>
+  <a href="#principles" class="h">9 · Design Principles</a>
+  <a href="#risks" class="h">10 · Risks</a>
+  <a href="#stack" class="h">11 · Stack &amp; Data</a>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="doc-tag">PRD · JUNE 2026 · APPROVED &amp; STRESS-TESTED ×5</div>
+  <h1>A personal instrument for the <em>0.001%</em> who actually measure.</h1>
+  <p class="thesis"><strong style="color:var(--ink)">CALIBEX</strong> = frictionless capture → an honest mirror → deliberate self-experiments → a personal <strong style="color:var(--amber-soft)">Playbook</strong>. An n-of-1 health instrument that correlates behaviour against WHOOP biometrics — and earns trust by saying “not enough signal yet” instead of confabulating.</p>
+  <div class="meta">
+    <div><b>Owner / Subject</b>n = 1 (founder is the guinea pig)</div>
+    <div><b>Status</b>Design locked · build not started</div>
+    <div><b>Foundation live</b>WHOOP → Supabase nightly sync</div>
+  </div>
+</div>
+
+<!-- 1 VISION -->
+<section id="vision">
+  <div class="kicker">SECTION 1</div>
+  <h2>Vision &amp; thesis</h2>
+  <p>Existing tools (WHOOP, Oura) surface generic advice from naive correlations that can’t control for confounds, and their logging friction burns users out — the founder quit WHOOP’s journal after ~250 committed days. CALIBEX’s opening is structural: <strong>friction engineered out</strong>, and <strong>statistical honesty engineered in</strong>.</p>
+  <p>The original thesis (“beat WHOOP with rigorous passive correlation”) was itself stress-tested and reframed: rigorous passive correlation at n-of-1 is structurally underpowered — honest gates may stay closed for months. So the insight engine is inverted:</p>
+  <div class="flow">
+    <div class="step"><span>M1</span><b>Frictionless capture</b></div>
+    <div class="step"><span>M2</span><b>Honest mirror</b></div>
+    <div class="step"><span>M3</span><b>Deliberate experiments</b></div>
+    <div class="step"><span>M4</span><b>The Playbook</b></div>
+  </div>
+  <div class="callout"><span class="label">THE DESTINATION</span>
+  <p>“Late session tonight — what do I eat so sleep isn’t affected?” CALIBEX answers with <em>your</em> tested protocol, because deliberate A/B cycles answered it — not because a correlation guessed.</p></div>
+  <p><strong>Passive correlations are demoted to hypothesis generators.</strong> They suggest what to experiment on; the experiment delivers the verdict. A deliberate two-week A/B sidesteps the low-n problem entirely — and the founder’s constant daily dinner is an experimental <em>asset</em>: a stable baseline where every deliberate tweak is measurable.</p>
+</section>
+<div class="rule"></div>
+
+<!-- 2 USER -->
+<section id="user">
+  <div class="kicker">SECTION 2</div>
+  <h2>The user</h2>
+  <p>One person, who is also the founder, tester, and analyst. Built for the <strong>niche of the niche</strong> — serious self-quantifiers who will actually do this — explicitly <em>not</em> median users.</p>
+  <table>
+    <tr><th>Attribute</th><th>Detail</th><th>Design consequence</th></tr>
+    <tr><td>Training</td><td>2–3 sessions/day, ~5 meals, based in India</td><td>Per-session firing; heat is a flagged confound</td></tr>
+    <tr><td>Goals</td><td>10K running performance · body composition · day-to-day recovery</td><td>The three Axis-C progress tracks</td></tr>
+    <tr><td>History</td><td>Burned out on WHOOP journaling after ~250 days</td><td>The founding wound — adherence is the #1 metric</td></tr>
+    <tr><td>Life</td><td>Demanding work; days deviate often</td><td>Work-life balance &amp; mental peace feed the sustainability axis (inputs, not scored goals)</td></tr>
+    <tr><td>Posture</td><td>“Treat me as a test guinea pig”</td><td>Everything provisional; instrument self-prunes &amp; self-weights</td></tr>
+  </table>
+</section>
+<div class="rule"></div>
+
+<!-- 3 GOALS -->
+<section id="goals">
+  <div class="kicker">SECTION 3</div>
+  <h2>Goals &amp; non-goals</h2>
+  <h3>Goals</h3>
+  <ul>
+    <li><strong>Primary (scored):</strong> performance, body composition, day-to-day recovery.</li>
+    <li>Sustain logging long-term by making capture near-invisible (~2 min rest day / ~3 min training day — the honest promise).</li>
+    <li>Build a compounding personal dataset — even unanswered questions keep their option value for future re-mining.</li>
+    <li>Answer situational questions via the Playbook (“my day changed — what’s my move?”).</li>
+  </ul>
+  <h3>Non-goals (explicit)</h3>
+  <ul>
+    <li><strong>No coaching product, no therapy, no wellness app.</strong> It is an instrument.</li>
+    <li><strong>No 1–10 self-rating scales, anywhere.</strong> Behavioural/somatic anchors only.</li>
+    <li><strong>No AI photo meal logger</strong> — cut as too inaccurate. No streaks, nags, or guilt mechanics; a skip is silent missing data.</li>
+    <li><strong>No surfaced insight below the honesty gate.</strong> “Not enough data yet” beats a spurious finding — one fabricated insight destroys the instrument’s credibility.</li>
+    <li>Work-life balance / mental peace are <em>inputs</em> to the sustainability axis — never scored goals.</li>
+  </ul>
+</section>
+<div class="rule"></div>
+
+<!-- 4 FRAMEWORK -->
+<section id="framework">
+  <div class="kicker">SECTION 4</div>
+  <h2>The 7-dimension athlete framework</h2>
+  <p>CALIBEX dropped the 6 ACLM lifestyle-medicine pillars (built for population disease-prevention) for a purpose-built athlete-optimization framework — derived from validated athlete-monitoring science (RESTQ-Sport, Hooper, DALDA, Foster load metrics, the Kellmann recovery-stress consensus, ABQ burnout model). <strong>The 7-dimension framework is the only framework.</strong></p>
+
+  <h3 id="axes">Three outcome axes</h3>
+  <div class="axes">
+    <div class="axis"><div class="ax">A</div><h4>Next-day recovery</h4><div class="cad">Daily · scored (M3)</div><p>Behavioural inputs correlated against tomorrow’s WHOOP HRV / recovery / RHR / sleep. The daily loop.</p></div>
+    <div class="axis"><div class="ax">B</div><h4>Sustainability / burnout</h4><div class="cad">Weekly · observational flag</div><p>A WHOOP-invisible early-warning trend from self-reported signals (detachment, autonomy, devaluation). Never correlated against WHOOP — its outcome is the self-reported trend itself.</p></div>
+    <div class="axis"><div class="ax">C</div><h4>Progress toward goals</h4><div class="cad">Weekly/monthly · trend display</div><p>Is it working? Per-goal trends (strength, endurance, body-comp). Input→progress correlation deferred until data clears honest gating.</p></div>
+  </div>
+  <div class="callout"><span class="label">WIRING DISCIPLINE</span><p>Life-Demand Load and Social each play two roles — an Axis-B trend term <em>and</em> an Axis-A multiplier on training cost (<code>recovery_dip = f(load) × life_demand_modifier</code>) — but are <strong>never double-counted</strong> as additive daily strain. The three axes never silently correlate weekly-against-weekly at low n.</p></div>
+
+  <h3 id="dimensions">The seven dimensions</h3>
+  <table>
+    <tr><th>#</th><th>Dimension</th><th>Axis</th><th>What it captures</th></tr>
+    <tr><td>1</td><td>Load &amp; Progression</td><td>A</td><td>Session load (RPE × duration) → <strong>Foster monotony/strain</strong> scored vs own baseline. ACWR demoted to a planning readout only (statistically contested).</td></tr>
+    <tr><td>2</td><td>Recovery State</td><td>A</td><td>Perceived recovery: central fatigue/freshness, somatic tension consequences, cognitive sharpness.</td></tr>
+    <tr><td>3</td><td>Sleep</td><td>A</td><td>WHOOP carries stages/duration; items carry perceived quality, maintenance, daytime cost. Up-weighted.</td></tr>
+    <tr><td>4</td><td>Physical Readiness</td><td>A</td><td>Soreness body-map + at-rest muscle fatigue (DOMS split from central fatigue).</td></tr>
+    <tr><td>5</td><td>Fueling &amp; Energy Availability</td><td>A</td><td>Eating regulation, cravings, hydration chip, dinner tag — plus the cross-axis RED-S guard.</td></tr>
+    <tr><td>6</td><td>Life-Demand Load</td><td>B</td><td>Non-training stress: work-bleed, detachment, autonomy, irritability. Where work-life balance lives.</td></tr>
+    <tr><td>7</td><td>Social Connection <span class="pill defer">DOWN-WEIGHTED</span></td><td>B</td><td>Kept per founder decision at low weight; relatedness also buffers the burnout flag.</td></tr>
+    <tr><td>+</td><td>Sustainability &amp; Meaning</td><td>B</td><td>Burnout guard: devaluation (“training felt like a chore”), mastery, calm/content.</td></tr>
+    <tr><td>—</td><td>Substances</td><td>A (penalty)</td><td>Cross-cutting quick-loggers (alcohol pegs, caffeine). Absolute scoring, off the z-path; drives <code>is_drinking_day</code> exclusions.</td></tr>
+  </table>
+</section>
+<div class="rule"></div>
+
+<!-- 5 INSTRUMENT -->
+<section id="questions">
+  <div class="kicker">SECTION 5</div>
+  <h2>The instrument — final question set</h2>
+  <p>~27 Axis-A items + 12 Axis-B items, sampled so the user only ever sees a few per touchpoint. Every item passes the <strong>memorability rule</strong>: it must reference a salient event, an action-with-consequence, or the current state at the moment asked — if the only way to answer is to guess, the item is cut. Severity 0–1, higher = more strain; <span class="prot">protective</span> items score asymmetrically (a “No” is neutral, never max strain); conditional items score N/A, never 0.</p>
+
+  <h3>Axis A — daily</h3>
+  <table class="q">
+    <tr><th>ID</th><th>Prompt</th><th>Dimension · touchpoint</th><th>Type</th></tr>
+    <tr><td>SQ1</td><td>How hard was it to get out of bed? <span class="pill new">FIXED ANCHOR</span></td><td>Sleep · breakfast</td><td>ord</td></tr>
+    <tr><td>SQ2</td><td>Wake feeling rested?</td><td>Sleep · breakfast</td><td class="prot">protective</td></tr>
+    <tr><td>SQ3</td><td>Still groggy or foggy an hour after waking?</td><td>Sleep · breakfast</td><td class="neg">neg</td></tr>
+    <tr><td>SM1</td><td>Was it a restless or broken night?</td><td>Sleep · breakfast</td><td class="neg">neg</td></tr>
+    <tr><td>SM2</td><td>Wake earlier than wanted, couldn’t get back to sleep?</td><td>Sleep · breakfast</td><td class="neg">neg</td></tr>
+    <tr><td>HY1</td><td>Urine colour this morning <span class="pill new">7-CHIP</span></td><td>Fueling · breakfast</td><td>chip</td></tr>
+    <tr><td>SD1</td><td>Nod off or fight to stay awake during the day?</td><td>Sleep · dinner</td><td class="neg">neg</td></tr>
+    <tr><td>SD2</td><td>Need caffeine or a walk to get through an afternoon slump today?</td><td>Sleep · dinner</td><td class="neg">neg</td></tr>
+    <tr><td>SD3</td><td>Felt alert and clear-headed through the afternoon?</td><td>Sleep · dinner</td><td class="prot">protective</td></tr>
+    <tr><td>AF1</td><td>Did your body feel heavy or sluggish today?</td><td>Recovery · dinner</td><td class="neg">neg</td></tr>
+    <tr><td>AF3</td><td>Did you feel physically fresh today?</td><td>Recovery · dinner</td><td class="prot">protective</td></tr>
+    <tr><td>PR1</td><td>Soreness body-map (region multi-select) <span class="pill new">NEW</span></td><td>Readiness · dinner/post-workout</td><td>map</td></tr>
+    <tr><td>PR2</td><td>Muscles sore or fatigued even at rest today?</td><td>Readiness · dinner</td><td class="neg">neg</td></tr>
+    <tr><td>RPE1</td><td>How hard was this session? (Easy/Moderate/Hard/Max → 3/5/7/9) <span class="pill new">FEEDS FOSTER</span></td><td>Load · per session</td><td>ord</td></tr>
+    <tr><td>AS1</td><td>Hit your planned weights / pace this session?</td><td>Load · per session</td><td>ord</td></tr>
+    <tr><td>AS2</td><td>Felt strong and powered through this session?</td><td>Load · per session</td><td class="prot">protective</td></tr>
+    <tr><td>NR1</td><td>Eat past comfortable fullness?</td><td>Fueling · per meal</td><td class="neg">neg</td></tr>
+    <tr><td>NR2</td><td>Eat when you weren’t actually hungry?</td><td>Fueling · per meal</td><td class="neg">neg</td></tr>
+    <tr><td>NC1</td><td>Eat something unplanned since your last meal?</td><td>Fueling · next meal</td><td class="neg">neg</td></tr>
+    <tr><td>AA1</td><td>Do the training you planned today? (N/A on rest days)</td><td>Load · dinner</td><td class="prot">protective</td></tr>
+    <tr><td>AA2</td><td>Skip or cut a planned session short? (N/A on rest days)</td><td>Load · dinner</td><td class="neg">neg</td></tr>
+    <tr><td>RS1</td><td>Tension headache, or caught yourself clenching your jaw, today?</td><td>Recovery · dinner</td><td class="neg">neg</td></tr>
+    <tr><td>RS2</td><td>Did it take a while to wind down and settle after the day?</td><td>Recovery · dinner</td><td class="neg">neg</td></tr>
+    <tr><td>RS3</td><td>Did a slip — forgetting or a careless mistake — cause a problem/rework today?</td><td>Recovery · dinner</td><td class="neg">neg</td></tr>
+    <tr><td>RS4</td><td>Felt mentally sharp and on top of things today?</td><td>Recovery · dinner</td><td class="prot">protective</td></tr>
+    <tr><td>NR3</td><td>Skip or significantly delay a planned meal today?</td><td>Fueling · dinner</td><td class="neg">neg</td></tr>
+    <tr><td>NC2</td><td>Give in to a strong craving today?</td><td>Fueling · dinner</td><td class="neg">neg</td></tr>
+    <tr><td>FD1</td><td>Dinner tag: composition + eaten-at, pre-filled with “your usual” <span class="pill new">FEEDS PLAYBOOK</span></td><td>Fueling · dinner</td><td>smart-default</td></tr>
+  </table>
+
+  <h3>Axis B — sustainability (event items daily; reflective items weekly)</h3>
+  <table class="q">
+    <tr><th>ID</th><th>Prompt</th><th>Dimension · cadence</th><th>Type</th></tr>
+    <tr><td>LD1</td><td>Snap at or feel short with someone?</td><td>Life-Demand · daily</td><td class="neg">neg</td></tr>
+    <tr><td>LD2</td><td>Couldn’t switch off in your downtime?</td><td>Life-Demand · daily</td><td class="neg">neg</td></tr>
+    <tr><td>FR1</td><td>Draining conflict or tense exchange with someone?</td><td>Social · daily</td><td class="neg">neg</td></tr>
+    <tr><td>FR2</td><td>Felt let down or frustrated by someone?</td><td>Social · daily</td><td class="neg">neg</td></tr>
+    <tr><td>CN1</td><td>Meaningful or enjoyable interaction today?</td><td>Social · daily</td><td class="prot">protective</td></tr>
+    <tr><td>CN2</td><td>Turn down or avoid a social plan today?</td><td>Social · daily</td><td class="neg">neg</td></tr>
+    <tr><td>LD3</td><td>Things felt like they were piling up on you?</td><td>Life-Demand · weekly</td><td class="neg">neg</td></tr>
+    <tr><td>LD4</td><td>Couldn’t stop thinking about work after hours? <span class="pill new">DETACHMENT</span></td><td>Life-Demand · weekly</td><td class="neg">neg</td></tr>
+    <tr><td>LD5</td><td>Had unscheduled time that was genuinely yours? <span class="pill new">AUTONOMY</span></td><td>Life-Demand · weekly</td><td class="prot">protective</td></tr>
+    <tr><td>SU1</td><td>Did training feel like a chore rather than something you wanted? <span class="pill new">DEVALUATION</span></td><td>Sustainability · weekly</td><td class="neg">neg</td></tr>
+    <tr><td>SU2</td><td>Felt genuinely calm or content at some point?</td><td>Sustainability · weekly</td><td class="prot">protective</td></tr>
+    <tr><td>SU3</td><td>Made progress you felt good about? <span class="pill new">MASTERY</span></td><td>Sustainability · weekly</td><td class="prot">protective</td></tr>
+  </table>
+  <p><strong>Axis C has no questions</strong> — only numbers: weekly weight, monthly waist, per-session lift weights (saved templates, M3), pace-at-HR (auto from WHOOP).</p>
+
+  <h3 id="touchpoints">Touchpoint map — what actually shows, when</h3>
+  <table>
+    <tr><th>Touchpoint</th><th>Pool</th><th>Shown</th></tr>
+    <tr><td>Breakfast</td><td>SQ1 + HY1 fixed · {SQ2, SQ3, SM1, SM2, NR1/NR2}</td><td>SQ1 + HY1 + ~2 sampled</td></tr>
+    <tr><td>Lunch</td><td>NR1/NR2 about lunch, NC1</td><td>~1–2 (rides the meal log)</td></tr>
+    <tr><td>Afternoon</td><td>AF1, AF3, SD1–3, PR1, PR2, NC1</td><td>~3 sampled</td></tr>
+    <tr><td>Post-workout <em>(per session)</em></td><td>RPE1 + duration fixed · {AS1, AS2}</td><td>RPE1 + 1 sampled</td></tr>
+    <tr><td>Dinner <em>(evening review)</em></td><td>AA1–2, RS1–4, NR3, NC2, FD1, LD1–2, FR1–2, CN1–2 (~14)</td><td>~4–5, stratified, <strong>protective-pin mandatory</strong></td></tr>
+    <tr><td>Weekly review</td><td>LD3–5, SU1–3 + weigh-in (+ monthly waist)</td><td>All (~6 + 1 number, once/week)</td></tr>
+  </table>
+  <div class="callout"><span class="label">SAMPLER — HARD REQUIREMENTS</span><p>Least-recently-served, dimension-stratified rotation with a per-facet staleness ceiling — and <strong>every dinner sample opens on a protective item</strong>. With ~14 items in the dinner pool, these two rules are what keep fill-rates viable and the evening review from becoming a deficit-sweep. They are MVP requirements, not polish.</p></div>
+  <p><strong>Honest daily cost:</strong> ~12–14 one-taps + a short per-session confirm ≈ <strong>2 min rest day / 3 min training day</strong>, never in one sitting.</p>
+</section>
+<div class="rule"></div>
+
+<!-- 6 MVP -->
+<section id="mvp">
+  <div class="kicker">SECTION 6</div>
+  <h2>MVP cut line &amp; roadmap</h2>
+  <p>The phased rollout makes weeks 1–4 a silent collection window — no scores shown regardless — so <strong>the scoring engine is not MVP</strong>. Build the capture surface, not the engine. <strong>Adherence is the only MVP metric.</strong></p>
+  <table>
+    <tr><th>Scope</th><th>Status</th></tr>
+    <tr><td>Capture app — Axis-A items at the touchpoints (tap → row)</td><td><span class="pill ship">SHIP</span></td></tr>
+    <tr><td>Raw <code>item_responses</code> storage, joined to live WHOOP by date</td><td><span class="pill ship">SHIP</span></td></tr>
+    <tr><td>Sampler (least-recently-served, stratified) + protective-pin</td><td><span class="pill ship">SHIP</span></td></tr>
+    <tr><td>Raw readout screen — answers beside next-day WHOOP recovery</td><td><span class="pill ship">SHIP</span></td></tr>
+    <tr><td>Weekly review screen (Axis-B reflective items + weigh-in)</td><td><span class="pill ship">SHIP</span></td></tr>
+    <tr><td>Quick-loggers (alcohol, caffeine) + FD1 dinner tag</td><td><span class="pill ship">SHIP</span></td></tr>
+    <tr><td>Axis-C raw numbers (weight, waist, pace-at-HR auto)</td><td><span class="pill ship">SHIP</span></td></tr>
+    <tr><td>Scoring engine (all of it) · Axis-B flag logic</td><td><span class="pill defer">DEFER M3</span></td></tr>
+    <tr><td>Saved-dish library · lift templates (strength capture starts M3 — eyes-open trade)</td><td><span class="pill defer">DEFER M3</span></td></tr>
+    <tr><td>Experiments tab · Goals · RED-S guard · self-prune automation</td><td><span class="pill defer">DEFER M3+</span></td></tr>
+    <tr><td>Heat/AQI auto-context · breathwork logger · circadian feed</td><td><span class="pill defer">DEFER</span></td></tr>
+  </table>
+  <div class="callout"><span class="label">#1 PRODUCT RISK</span><p><strong>Logging into a void.</strong> WHOOP at least paid a daily score; a purely silent CALIBEX gives back nothing for a month — strictly worse than the thing that already burned the founder out. Mitigation: the raw readout screen is real data (never a faked score) and doubles as the experiment’s instrumentation. One screen, two jobs.</p></div>
+  <ol class="roadmap">
+    <li><span class="m">M1 · THIS WEEK</span><b>Capture v0.</b> Touchpoint capture + raw storage + sampler + readout + weekly review. No scoring views.</li>
+    <li><span class="m">M2 · ~4 WEEKS</span><b>Adherence shakedown</b> (the silent phase). Friction map per touchpoint; per-item variance by eye; hand-prune. <b>Success = sustained logging without it becoming a chore</b> + a prune/keep shortlist.</li>
+    <li><span class="m">M3</span><b>Experiments tab first</b> (primary insight engine — lightweight tag-a-window → baseline-vs-intervention compare), then the scoring engine, lift templates &amp; dish library <em>if data justifies</em>, Goals, Axis-B flag, RED-S guard.</li>
+    <li><span class="m">M4</span><b>Validated instrument + the Playbook.</b> Self-weighting/pruning live; per-deviation protocols accumulating; Axis-C correlations un-deferred once n clears honest gating.</li>
+  </ol>
+</section>
+<div class="rule"></div>
+
+<!-- 7 FLAGSHIP -->
+<section id="flagship">
+  <div class="kicker">SECTION 7</div>
+  <h2>Flagship features</h2>
+
+  <h3>Experiments — the primary insight engine</h3>
+  <p>Structured n-of-1 A/B on your own body: define an intervention + hypothesis + baseline-vs-intervention window + outcome metrics (HRV, recovery, sleep, subjective). A deliberate two-week A/B is statistically <strong>cleaner than passive correlation at low n</strong> — it sidesteps the core n-problem. Passive correlations feed it as hypothesis generators.</p>
+  <div class="callout"><span class="label">ARCHITECTURE — SEPARATE FLOW</span><p>Experiments live in their own dedicated flow, <strong>architecturally separate from the daily capture + scoring loop.</strong> The daily loop is passive, quiet, habitual; an experiment is active, intentional, and focused (set it up → run it → read the verdict). It must not clutter the everyday capture surface, and where an experiment needs finer data (e.g. intraday HR via Apple Watch), that heavier sampling lives inside the experiment, not the daily ritual.</p></div>
+
+  <h3 id="playbook">The Playbook — the product destination (M4)</h3>
+  <p>Per-deviation-type personal protocols accumulated from experiment results: <em>late session · late dinner · travel · drinking night · high-stress day</em> → “here’s what worked for you.” This answers the founder’s flagship question — <em>“late gym tonight, what do I eat so sleep isn’t affected?”</em> — with tested protocols (“lighter, earlier-carb dinner protected your sleep in 3 of 3 trials”), not guesses. Interactions like timing×food are unanswerable passively at n-of-1; a constant dinner means zero variance and nothing to correlate. Only deliberate tweaks answer “what if.”</p>
+
+  <h3 id="intraday">Intraday biometrics — slicing the data you already have</h3>
+  <p>A device records minute-level heart rate 24/7 — an objective second channel that costs
+  <strong>zero extra logging</strong> and timestamps what you self-report. <strong>Source matters
+  (verified against the real data):</strong> WHOOP's official API <em>and</em> its CSV export are
+  <strong>daily/per-workout summaries only</strong> — no minute-level HR (confirmed in the repo's
+  WHOOP export). Minute HR comes from <strong>Apple&nbsp;Watch → HealthKit (the reliable route)</strong>,
+  or WHOOP's unofficial internal API (fragile, ToS-gray — fine for a one-off experiment, not a
+  backbone). WHOOP stays the daily-recovery engine. <strong>Heart rate, not HRV</strong> for this
+  layer (HRV is once-daily everywhere — confirmed: one value per row in the export — and remains
+  the recovery outcome of the <em>daily</em> loop); the intraday win is HR <em>reactivity</em>.</p>
+  <div class="callout"><span class="label">THE MECHANISM — TIMESTAMPED INPUT × HR WINDOW</span><p>Logged events carry a <em>time</em> (caffeine 4pm · dinner 8:30pm · session end 7pm) and HR is now per-minute, so each event becomes a mini natural experiment: HR <em>before</em> vs <em>after</em>. This quietly attacks the project's hardest problem — <strong>low n</strong>. A daily correlation gives ~1 point/day; <strong>event→HR-response gives one point per event</strong> (dozens of caffeines, meals, sessions a month), each a within-you before/after. Far more power, no HRV required.</p></div>
+  <div class="callout" style="border-left-color:var(--warn);background:rgba(194,65,12,.05)"><span class="label" style="color:var(--warn)">THE CATCH — EVENT TIME, NOT LOG TIME</span><p>Only works when the timestamp marks <em>when the thing happened</em>, not when you tapped it. <strong>Clean</strong> for time-stamped events — caffeine/alcohol quick-loggers, the dinner eaten-at tag, WHOOP workout times (already captured). <strong>Breaks</strong> for retrospective items (“snapped at 2pm, logged at dinner”) → they stay daily-resolution unless logged in real time or given an event-time. Even clean events need before/after <em>controls</em> (posture / walking to get the coffee move HR too) — it's a controlled before/after, not a naive bump-counter.</p></div>
+  <div class="callout"><span class="label">FREE INPUTS — CALENDAR &amp; EXISTING TIMESTAMPED DATA</span><p>The best timestamped inputs are ones you <strong>never log at all.</strong> Your <strong>work calendar</strong> already knows when meetings are and who attends — pre-timestamped context, zero friction → correlate against intraday HR for a stress map of your week (a viral WHOOP-calendar “coworker stress leaderboard,” built by reverse-engineering WHOOP for per-minute HR, is live proof of exactly this). Generalizes to any existing timestamped source: calendar, WHOOP workout times, the quick-loggers. <em>Feasibility note: for a personal n-of-1 tool, reverse-engineering WHOOP for minute HR is a tolerable risk (proven to work; just re-run if it breaks) — Apple Watch / HealthKit is the more stable route, ToS risk only bites on commercial redistribution.</em></p></div>
+  <table>
+    <tr><th>Axis</th><th>What minute-level HR adds</th></tr>
+    <tr><td><strong>A · Recovery</strong></td><td><strong>Overnight wind-down measured directly</strong> — does a late session/dinner keep your HR elevated into sleep? (your flagship question, answered without waiting for next-morning recovery). Plus <strong>HR-recovery after sessions</strong> as an objective fatigue gauge, and <strong>daytime resting-HR drift</strong> as an early illness/overtraining tripwire that moves <em>before</em> the morning score. Turns subjective recovery items into measurable ones.</td></tr>
+    <tr><td><strong>B · Sustainability</strong></td><td><strong>An objective stress fingerprint:</strong> strip out workouts, and sedentary HR elevations show <em>when</em> and <em>how much</em> your body actually stresses — cross-checking the self-reported Life-Demand items (tap “felt calm” but HR was cranked 2–5pm? revealing). The axis WHOOP “can’t see” gains a corroborating channel. <em>Exploratory — kept separate from the scored daily loop; never silently correlated against Axis-A morning HRV.</em></td></tr>
+    <tr><td><strong>C · Progress</strong></td><td><strong>HR-recovery trend + resting-HR trend</strong> over weeks = objective cardiovascular-fitness markers for the endurance goal, alongside pace-at-HR. Speeding up = fitter; slowing = accumulating fatigue. Free progress signal, no logging.</td></tr>
+  </table>
+  <div class="callout"><span class="label">PLACEMENT &amp; FEASIBILITY</span><p>A <strong>core M3+ analysis layer</strong> (the intraday HR-correlation engine), not a side toy — it partially cracks the low-n problem the daily engine can't. <strong>Reliable source = Apple Watch / HealthKit</strong> (WHOOP gives no minute HR via official routes — verified). Gated on that integration + the event-time discipline; the daily capture loop stays on the clean WHOOP API. M3+, not MVP. <em>Open check: a fresh WHOOP export may now include a per-minute "metrics" file — confirm before assuming.</em></p></div>
+
+  <h3>Goals <span class="pill new">MAIN SECTION</span></h3>
+  <p>User-set targets (weight, muscle, 10K time, waist, lift PR) with value + date — the front-end of Axis-C, turning abstract trends into progress-toward-<em>your</em>-target. Per-goal bars + a plain-language roll-up; <strong>no single composite bar</strong> (it mixes units and can move against a successful recomposition).</p>
+  <div class="callout"><span class="label">ARCHITECTURE — IN THE MAIN VIEW</span><p>Goals &amp; progress are <strong>woven seamlessly into the app's main section</strong>, not a buried side tab. They're the “why am I doing this every day” anchor — visible alongside the daily flow so the logging always connects to the targets it serves. (Opposite of Experiments, which is deliberately its own separate flow.)</p></div>
+
+  <h3>Quiet inputs</h3>
+  <ul>
+    <li><strong>Quick-loggers:</strong> alcohol (pegs; default none) and caffeine (cups + last-cup time; pre-filled usual). Logged only when they happen — never asked.</li>
+    <li><strong>Saved templates:</strong> workouts (load last session, log only the weight-bumps) and dishes (one-tap repeat + portion) — both M3.</li>
+    <li><strong>Deferred levers:</strong> breathwork logger (the one lever with meta-analytic evidence for directly raising vagal HRV — log → correlate → prescribe), weather/AQI auto-context.</li>
+  </ul>
+</section>
+<div class="rule"></div>
+
+<!-- 8 SCORING -->
+<section id="scoring">
+  <div class="kicker">SECTION 8</div>
+  <h2>Scoring engine — the M3 machinery</h2>
+  <p>Survived three statistical stress-test rounds. None of it is MVP; all of it is specified:</p>
+  <ul>
+    <li><strong>Item-level baselining → trailing 7–14d window → dimension scores.</strong> Each item is normalized against its own history before aggregation, so rotating items with different base rates stays valid.</li>
+    <li><strong>Partial-pooling cold-start:</strong> shrink each item toward its facet pool until it has enough observations; gate on item maturity — never a silent NULL or raw mean.</li>
+    <li><strong>Protective aggregation:</strong> base = mean over answered negative items; a protective “Yes” applies a bounded downward adjustment; a facet is never scored from a protective item alone.</li>
+    <li><strong>Conditional N/A:</strong> excluded from gates and baseline denominators (never scored 0).</li>
+    <li><strong>Foster monotony/strain</strong> from RPE × duration, scored vs the user’s own baseline (population risk-zones misread a near-daily trainer). ACWR is display-only.</li>
+    <li><strong>Substances off the z-path:</strong> absolute dose; <code>is_drinking_day</code> threshold drives exclusions. Never additively pooled with z-scored dimensions.</li>
+    <li><strong>Effective-sample-size gating everywhere:</strong> autocorrelated days are not independent; insights gate on n_eff and minimum occurrences, with FDR control across the hypothesis family.</li>
+    <li><strong>Axis-C metrics:</strong> est-1RM (Epley, ≤8–10 reps, per-lift), body weight 7-day moving average, waist 4-week fixed-protocol trend, pace-at-HR (heat-flagged).</li>
+    <li><strong>RED-S guard (cross-axis):</strong> sustained under-fuelling + declining recovery + stalling strength — a healthy cut holds strength, RED-S regresses it. Observational; never the clinical label.</li>
+  </ul>
+</section>
+<div class="rule"></div>
+
+<!-- 9 PRINCIPLES -->
+<section id="principles">
+  <div class="kicker">SECTION 9</div>
+  <h2>Design principles &amp; guardrails</h2>
+  <table>
+    <tr><th>Principle</th><th>What it forbids / requires</th></tr>
+    <tr><td>Friction is structural</td><td>Logging piggybacks on existing moments. No streaks/nags. Skips are silent. Honest promise: ~2–3 min/day.</td></tr>
+    <tr><td>Memorability</td><td>Items reference recallable events/consequences or current state. No fleeting micro-states, no body-scan prompts (nocebo), no “vs normal” self-comparison.</td></tr>
+    <tr><td>Deviation from baseline</td><td>Everything scores relative to the user’s own rolling norm — a late dinner matters vs <em>his</em> normal, not a clock.</td></tr>
+    <tr><td>Statistical honesty</td><td>Nothing surfaces below the gate. “Not enough signal yet” is a feature. No naive Pearson on autocorrelated series.</td></tr>
+    <tr><td>Item-level storage, computed scores</td><td>Long-format rows; scores live in views and can change without rewriting history. <code>wake_date</code> is the universal join key.</td></tr>
+    <tr><td>Valence balance</td><td>Every touchpoint pool carries an outward-pointing positive; dinner pins one. The instrument must never become a nightly deficit audit.</td></tr>
+    <tr><td>Self-testing instrument</td><td>Low bar to try a signal, high bar to keep it: flat items retire (~30d), predictive items up-weight. The data decides, not paper review.</td></tr>
+  </table>
+</section>
+<div class="rule"></div>
+
+<!-- 10 RISKS -->
+<section id="risks">
+  <div class="kicker">SECTION 10</div>
+  <h2>Risks &amp; mitigations</h2>
+  <div class="risk-grid">
+    <div class="risk"><h4>Logging into a void</h4><p>A silent month gives back less than the product that already burned the founder out. <b>Mitigation:</b> raw readout screen from day 1 — real data beside next-day WHOOP.</p></div>
+    <div class="risk"><h4>Low-n honesty paradox</h4><p>Rigorous passive correlation may honestly say nothing for months. <b>Mitigation:</b> experiments-first reframe; correlations demoted to hypothesis generators.</p></div>
+    <div class="risk"><h4>WHOOP dependency</h4><p>The outcome variable is a third-party black box; algorithm updates can masquerade as physiological change. <b>Mitigation:</b> prefer raw HRV/RHR over the composite score where possible; pure read-only source.</p></div>
+    <div class="risk"><h4>Nocebo / measurement reactivity</h4><p>Prompting an anxiety-prone tracker to scan for symptoms can manufacture them. <b>Mitigation:</b> memorability rule, no body-scans, protective pins, evening review framed outward.</p></div>
+    <div class="risk"><h4>Adherence decay (base rates)</h4><p>Most self-tracking dies by month two. <b>Mitigation:</b> M2 is explicitly an adherence experiment; the friction map prunes whatever doesn’t earn its place.</p></div>
+    <div class="risk"><h4>Surprising-insight paradox</h4><p>The most novel insights need the most power. <b>Mitigation:</b> the realistic v1 win is quantifying suspected effects (“alcohol costs 3 days, not 1”) — framed as such, honestly.</p></div>
+  </div>
+</section>
+<div class="rule"></div>
+
+<!-- 11 STACK -->
+<section id="stack">
+  <div class="kicker">SECTION 11</div>
+  <h2>Stack &amp; data model</h2>
+  <table>
+    <tr><th>Layer</th><th>Choice</th><th>Status</th></tr>
+    <tr><td>Backend</td><td>Supabase (Postgres), RLS via <code>auth.uid()</code>, single user</td><td><span class="pill ship">LIVE</span></td></tr>
+    <tr><td>Biometrics</td><td>WHOOP developer OAuth — HRV, recovery, sleep stages, RHR, strain. Pure read-only source; nothing pushed back.</td><td><span class="pill ship">LIVE</span> nightly sync (GitHub Actions)</td></tr>
+    <tr><td>Spine</td><td>7 tables (<code>cycles</code>, <code>workouts</code>, <code>meals</code>, <code>drinks</code>, …) joined on <code>wake_date</code> — encodes WHOOP’s N-1 cycle offset. No competing key, ever.</td><td><span class="pill ship">LIVE</span> ~283 cycles imported</td></tr>
+    <tr><td>Instrument (M1)</td><td><code>item_responses</code> (one row per item per day: raw_value, severity-at-write, answered/skipped/N-A, answered_at, touchpoint) + weight/waist tables</td><td><span class="pill new">TO BUILD</span></td></tr>
+    <tr><td>M3 additions</td><td>Scoring views (all machinery in §8) · workout templates · per-exercise lift log · dish library · experiments tables · progress views</td><td><span class="pill defer">DEFER</span></td></tr>
+    <tr><td>Capture app</td><td>Web app (stack TBD at build), designed with the installed <code>design-taste-frontend</code> skill; navy + amber language</td><td><span class="pill new">TO BUILD</span></td></tr>
+  </table>
+  <p style="margin-top:8px"><strong>Verification at M1:</strong> a tap at each touchpoint lands as a correctly-keyed row against live WHOOP rows; the sampler rotates and every dinner sample includes a protective item; the readout shows yesterday’s answers beside today’s recovery; quick-loggers write to <code>drinks</code>; the weekly review fires once.</p>
+</section>
+
+<div class="foot">
+  <span>CALIBEX · PRD v1.0 · June 2026</span>
+  <span>Design locked · 5 stress-test rounds · build pending go</span>
+</div>
+
+</main>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a[href^="#"]'));
+  var targets = links.map(function(a){
+    var el = document.getElementById(a.getAttribute('href').slice(1));
+    return el ? {link:a, el:el} : null;
+  }).filter(Boolean);
+
+  function update(){
+    var line = window.innerHeight * 0.3; // reading line: 30% down the viewport
+    var current = targets[0];
+    for (var i = 0; i < targets.length; i++){
+      if (targets[i].el.getBoundingClientRect().top <= line) current = targets[i];
+      else break;
+    }
+    // at the very bottom, force-highlight the last entry
+    if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4){
+      current = targets[targets.length - 1];
+    }
+    links.forEach(function(a){ a.classList.toggle('active', current && a === current.link); });
+  }
+
+  var ticking = false;
+  function onScroll(){
+    if (!ticking){
+      ticking = true;
+      requestAnimationFrame(function(){ update(); ticking = false; });
+    }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll, {passive:true});
+  update();
+})();
+</script>
+</body>
+</html>

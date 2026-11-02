@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CALIBEX — App Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4f1ea; --card:#ffffff; --card-2:#faf8f3;
+    --ink:#15233c; --ink-2:#42526c; --ink-3:#79839a;
+    --line:#e7e2d6; --line-2:#efeae0;
+    --navy:#1b2c4a; --amber:#bd7d18; --amber-br:#f5a524; --amber-bg:#fbf1de;
+    --good:#3f8f5b; --good-bg:#eaf3ec; --warn:#c2592b;
+    --serif:'Archivo',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --sans:'Archivo',-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif;
+    --shadow:0 1px 2px rgba(21,35,60,.05);
+    --lift:0 2px 10px rgba(21,35,60,.06);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{background:#e8e3d8;font-family:var(--sans);color:var(--ink);display:flex;gap:40px;flex-wrap:wrap;
+       align-items:flex-start;justify-content:center;padding:46px 20px;min-height:100vh;
+       background-image:radial-gradient(circle at 30% 0%,#efe9dc,#e3ddd0)}
+
+  .stage{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .stage .cap{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9a917f;font-weight:600}
+
+  /* ---- phone ---- */
+  .phone{width:380px;height:812px;background:var(--paper);border-radius:46px;position:relative;overflow:hidden;
+         box-shadow:0 2px 6px rgba(0,0,0,.12),0 30px 60px rgba(21,35,60,.22),inset 0 0 0 9px #12161d,inset 0 0 0 11px #2a2f38;}
+  .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:150px;height:30px;background:#12161d;
+         border-radius:0 0 20px 20px;z-index:60}
+  .screen{position:absolute;inset:11px;border-radius:36px;overflow:hidden;background:var(--paper);display:flex;flex-direction:column}
+  .statusbar{height:46px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 6px;font-size:13px;font-weight:600;color:var(--ink);flex:none}
+  .statusbar .dots{letter-spacing:1px}
+
+  /* ---- scroll body ---- */
+  .body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .body::-webkit-scrollbar{display:none}
+  .pad{padding:6px 22px 120px}
+
+  /* ---- HOME ---- */
+  .greet{display:flex;justify-content:space-between;align-items:baseline;margin:8px 0 22px}
+  .greet h1{font-family:var(--serif);font-size:25px;font-weight:500;letter-spacing:-.02em;line-height:1.12}
+  .greet .wm{font-size:11px;letter-spacing:.28em;color:var(--amber);font-weight:700}
+
+  .hero{background:var(--card);border-radius:18px;padding:22px 22px 18px;box-shadow:var(--lift);margin-bottom:18px;position:relative;overflow:hidden}
+  .hero .lbl{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+  .hero .num{font-family:var(--serif);font-size:62px;line-height:1;font-weight:400;margin-top:6px;letter-spacing:-.02em}
+  .hero .num span{font-size:26px;color:var(--ink-3)}
+  .hero .delta{display:inline-block;margin-left:10px;font-size:13px;color:var(--good);background:var(--good-bg);padding:3px 9px;border-radius:20px;vertical-align:14px;font-weight:600}
+  .spark{margin-top:14px;height:46px;width:100%}
+  .spark-x{display:flex;justify-content:space-between;font-size:10px;color:var(--ink-3);margin-top:4px}
+  .hero-foot{display:flex;justify-content:space-between;align-items:center;margin-top:15px;padding-top:14px;border-top:1px solid var(--line)}
+  .hero-foot b{font-family:var(--serif);font-size:30px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .hero-foot .dt{font-size:11.5px;color:var(--ink-3);margin-left:7px}
+  .hero-foot .pending{font-size:11px;color:var(--ink-3);font-weight:600;display:flex;align-items:center;gap:5px}
+  .hero-foot .pending i{width:6px;height:6px;border-radius:50%;background:var(--amber);display:inline-block;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+  .runway{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--ink-2);margin:2px 4px 20px}
+  .runway .bar{flex:1;height:5px;background:var(--line);border-radius:5px;overflow:hidden}
+  .runway .bar i{display:block;height:100%;width:43%;background:linear-gradient(90deg,var(--amber-br),var(--amber));border-radius:5px}
+
+  .sec-h{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin:0 4px 11px}
+
+  /* touchpoint queue — a calm list, not floating cards */
+  .today{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:26px}
+  .trow{display:flex;align-items:center;gap:13px;padding:14px 17px;border-bottom:1px solid var(--line);transition:background .18s ease}
+  .trow:last-child{border-bottom:none}
+  .trow .dot{width:8px;height:8px;border-radius:50%;flex:none;background:var(--line)}
+  .trow .nm{flex:1;font-weight:600;font-size:15px}
+  .trow .t{font-size:12.5px;color:var(--ink-3);font-weight:500}
+  .trow.done .dot{background:var(--good)}
+  .trow.done .nm{font-weight:500;color:var(--ink-2)}
+  .trow.open{background:var(--amber-bg);cursor:pointer}
+  .trow.open .dot{background:var(--amber)}
+  .trow.open .nm{color:var(--ink)}
+  .trow.open .t{color:var(--amber);font-weight:700}
+  .trow.open .go{color:var(--amber);font-size:18px;font-weight:600}
+  .trow.open:active{background:#f6e9d0}
+
+  /* timeline */
+  .tl{display:flex;flex-direction:column}
+  .tlrow{display:flex;align-items:center;gap:13px;padding:13px 4px;border-bottom:1px solid var(--line)}
+  .tlrow .d{width:42px;font-size:12px;color:var(--ink-3);font-weight:600;line-height:1.25}
+  .tlrow .d b{display:block;color:var(--ink);font-family:var(--serif);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+  .tlrow .rec{font-family:var(--serif);font-size:22px;width:54px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+  .tlrow .rec.lo{color:var(--warn)} .tlrow .rec.hi{color:var(--good)}
+  .tlrow .meta{flex:1;display:flex;flex-direction:column;gap:5px}
+  .glyphs{display:flex;gap:4px;align-items:center}
+  .glyphs i{width:7px;height:7px;border-radius:2px;background:var(--line)}
+  .glyphs i.on{background:var(--navy)} .glyphs i.neg{background:var(--warn)}
+  .tags{display:flex;gap:6px;font-size:11px;color:var(--ink-3)}
+  .tags .t{background:#f0ede4;padding:1.5px 7px;border-radius:20px}
+  .tags .t.al{background:#f3e7d6;color:#9a6a1e}
+
+  /* ---- CAPTURE OVERLAY ---- */
+  .capture{position:absolute;inset:0;background:var(--paper);z-index:50;display:flex;flex-direction:column;
+           transform:translateY(100%);transition:transform .32s cubic-bezier(.22,1,.36,1);visibility:hidden}
+  .capture.show{transform:translateY(0);visibility:visible}
+  .cap-top{padding:54px 24px 10px;display:flex;align-items:center;justify-content:space-between;flex:none}
+  .cap-top .ttl{font-weight:700;font-size:14px;letter-spacing:.04em}
+  .cap-top .x{font-size:22px;color:var(--ink-3);width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+  .prog{display:flex;gap:6px;padding:6px 24px 0;flex:none}
+  .prog i{height:4px;flex:1;background:var(--line);border-radius:4px;transition:background .3s}
+  .prog i.on{background:var(--amber)}
+  .prog i.done{background:var(--navy)}
+
+  .deck{flex:1;position:relative;overflow:hidden}
+  .qcard{position:absolute;inset:0;padding:40px 26px;display:flex;flex-direction:column;
+          opacity:0;transform:translateX(34px);transition:opacity .22s ease,transform .26s cubic-bezier(.22,1,.36,1);pointer-events:none}
+  .qcard.active{opacity:1;transform:translateX(0);pointer-events:auto}
+  .qcard.left{opacity:0;transform:translateX(-40px)}
+  .qcard .kik{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--amber);margin-bottom:auto}
+  .qcard .kik.prot{color:var(--good)}
+  .qcard .q{font-family:var(--serif);font-size:29px;line-height:1.24;font-weight:500;letter-spacing:-.02em;margin:18px 0 34px}
+  .opts{display:flex;flex-direction:column;gap:11px;margin-top:auto}
+  .opt{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:18px 20px;font-size:16.5px;font-weight:600;
+       display:flex;align-items:center;justify-content:space-between;transition:all .13s;color:var(--ink)}
+  .opt:active{transform:scale(.98)}
+  .opt.sel{border-color:var(--navy);background:var(--navy);color:#fff}
+  .opt .k{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex:none}
+  .opt.sel .k{border-color:#fff;background:#fff;position:relative}
+  .opt.sel .k::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--navy)}
+  .opt.good.sel{background:var(--good);border-color:var(--good)} .opt.good.sel .k::after{background:var(--good)}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:auto}
+  .chip{background:var(--card);border:1.5px solid var(--line);border-radius:30px;padding:11px 18px;font-size:14.5px;font-weight:600}
+  .chip.sel{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .skip{text-align:center;margin-top:18px;font-size:13px;color:var(--ink-3);font-weight:500}
+
+  .done-card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+             opacity:0;transform:scale(.96);transition:opacity .4s,transform .4s;pointer-events:none;padding:40px}
+  .done-card.show{opacity:1;transform:scale(1)}
+  .done-card .check{width:78px;height:78px;border-radius:50%;background:var(--good-bg);color:var(--good);display:flex;align-items:center;justify-content:center;font-size:38px}
+  .done-card h2{font-family:var(--serif);font-size:26px;font-weight:400}
+  .done-card p{color:var(--ink-2);font-size:14px;text-align:center}
+  .done-card .t{font-size:12.5px;color:var(--ink-3);margin-top:4px}
+
+  .home-ind{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:128px;height:5px;border-radius:5px;background:#cfc8b8;z-index:60}
+
+  .note{max-width:300px;font-size:13px;color:#6c6557;line-height:1.6;text-align:center}
+  .note b{color:#3c3424}
+  @media (prefers-reduced-motion: reduce){
+    *{transition-duration:.01ms !important;animation-duration:.01ms !important;animation-iteration-count:1 !important}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ SCREEN 1: HOME ============ -->
+<div class="stage">
+  <div class="cap">Home · the pulse</div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="dots">●●● ⌃ ▮</span></div>
+      <div class="body"><div class="pad">
+
+        <div class="greet">
+          <h1>Tuesday<br>evening.</h1>
+          <span class="wm">CALIBEX</span>
+        </div>
+
+        <div class="hero">
+          <div class="lbl">Recovery · last 14 days</div>
+          <svg class="spark" style="height:66px;margin-top:12px" viewBox="0 0 320 46" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#e4b15f" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"
+              points="0,30 21,24 43,33 64,18 85,26 107,38 128,22 149,30 171,34 192,20 213,28 235,16 256,24 277,33 299,20 320,14"/>
+            <circle cx="299" cy="20" r="3.5" fill="#c8841a"/>
+          </svg>
+          <div class="hero-foot">
+            <div><b>78%</b><span class="dt">Mon · your last settled day</span></div>
+            <div class="pending"><i></i> tonight syncs tomorrow</div>
+          </div>
+        </div>
+
+        <div class="runway">
+          <span>Day&nbsp;12 of gathering</span><span style="color:var(--ink-3)">· ~16 days to your first signal check</span>
+        </div>
+
+        <div class="sec-h">Today</div>
+        <div class="today">
+          <div class="trow done"><span class="dot"></span><span class="nm">Breakfast</span><span class="t">8:12a</span></div>
+          <div class="trow done"><span class="dot"></span><span class="nm">Lunch</span><span class="t">1:30p</span></div>
+          <div class="trow done"><span class="dot"></span><span class="nm">Afternoon</span><span class="t">4:48p</span></div>
+          <div class="trow open" onclick="openCapture()"><span class="dot"></span><span class="nm">Dinner review</span><span class="t">open · ~40s</span><span class="go">›</span></div>
+        </div>
+
+        <div class="sec-h">Your days, next to your recovery</div>
+        <div class="tl">
+          <div class="tlrow"><div class="d">Mon<b>13</b></div><div class="rec hi">78</div>
+            <div class="meta"><div class="glyphs"><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i></div>
+            <div class="tags"><span class="t">good sleep</span></div></div></div>
+          <div class="tlrow"><div class="d">Sun<b>12</b></div><div class="rec lo">54</div>
+            <div class="meta"><div class="glyphs"><i class="on"></i><i class="neg"></i><i class="on"></i><i class="neg"></i></div>
+            <div class="tags"><span class="t al">🍷 3–4</span><span class="t">late dinner</span></div></div></div>
+          <div class="tlrow"><div class="d">Sat<b>11</b></div><div class="rec lo">58</div>
+            <div class="meta"><div class="glyphs"><i class="on"></i><i class="neg"></i><i class="on"></i></div>
+            <div class="tags"><span class="t al">🍷 1–2</span></div></div></div>
+          <div class="tlrow"><div class="d">Fri<b>10</b></div><div class="rec hi">81</div>
+            <div class="meta"><div class="glyphs"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+            <div class="tags"><span class="t">☕ usual</span></div></div></div>
+        </div>
+
+      </div></div>
+
+      <!-- CAPTURE OVERLAY -->
+      <div class="capture" id="cap">
+        <div class="cap-top"><span class="x" id="backBtn" onclick="goBack()" style="visibility:hidden">‹</span><span class="ttl" style="flex:1;text-align:center">DINNER REVIEW</span><span class="x" onclick="closeCapture()">✕</span></div>
+        <div class="prog" id="prog"></div>
+        <div class="deck" id="deck">
+
+          <!-- card 0: protective pin (opens positive) -->
+          <div class="qcard" data-card="0">
+            <div class="kik prot">A good thing first</div>
+            <div class="q">Have a meaningful or enjoyable interaction today?</div>
+            <div class="opts">
+              <div class="opt" onclick="answer(this,0)"><span>No</span><span class="k"></span></div>
+              <div class="opt good" onclick="answer(this,0)"><span>Yes</span><span class="k"></span></div>
+            </div>
+            <div class="skip" onclick="next(0)">skip</div>
+          </div>
+
+          <!-- card 1: FD1 dinner tag — the spine, lands first so it's never lost -->
+          <div class="qcard" data-card="1">
+            <div class="kik">Tonight's dinner</div>
+            <div class="q">Your usual, around the usual time?</div>
+            <div class="chips">
+              <div class="chip sel" onclick="pick(this)">Usual ✓</div>
+              <div class="chip" onclick="pick(this)">Lighter</div>
+              <div class="chip" onclick="pick(this)">Heavier</div>
+              <div class="chip" onclick="pick(this)">Carb-lean</div>
+              <div class="chip" onclick="pick(this)">Carb-heavy</div>
+            </div>
+            <div class="opts" style="margin-top:22px"><div class="opt sel" onclick="next(1)"><span>Confirm · 8:30pm</span><span style="font-size:14px;color:#cdd6e4">tap to change</span></div></div>
+            <div class="skip" onclick="next(1)">looks right →</div>
+          </div>
+
+          <!-- card 2 -->
+          <div class="qcard" data-card="2">
+            <div class="kik">Recovery</div>
+            <div class="q">Did it take a while to wind down and settle after the day?</div>
+            <div class="opts">
+              <div class="opt" onclick="answer(this,2)"><span>No</span><span class="k"></span></div>
+              <div class="opt" onclick="answer(this,2)"><span>Yes</span><span class="k"></span></div>
+            </div>
+            <div class="skip" onclick="next(2)">skip</div>
+          </div>
+
+          <!-- card 3 -->
+          <div class="qcard" data-card="3">
+            <div class="kik">Fueling</div>
+            <div class="q">Skip or significantly delay a planned meal today?</div>
+            <div class="opts">
+              <div class="opt" onclick="answer(this,3)"><span>No</span><span class="k"></span></div>
+              <div class="opt" onclick="answer(this,3)"><span>Yes</span><span class="k"></span></div>
+            </div>
+            <div class="skip" onclick="next(3)">skip</div>
+          </div>
+
+          <!-- done -->
+          <div class="done-card" id="doneCard">
+            <div class="check">✓</div>
+            <h2>Dinner logged.</h2>
+            <p>That's your day captured. Nothing else is owed.</p>
+            <div class="t">~40 seconds · see you tomorrow</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-ind"></div>
+    </div>
+  </div>
+  <div class="note">Tap <b>“Dinner review”</b> to feel the capture flow — one question per card, opens on a positive, the dinner tag is a one-tap confirm. ~40s, then it's done.</div>
+</div>
+
+<!-- ============ SCREEN 2: WIDGET + CAPTURE STILL ============ -->
+<div class="stage">
+  <div class="cap">Lock-screen widget · the silent cue</div>
+  <div class="phone" style="height:520px">
+    <div class="notch"></div>
+    <div class="screen" style="background:linear-gradient(165deg,#1a2336,#0e1626);align-items:center;justify-content:flex-start">
+      <div class="statusbar" style="color:#cdd6e4;width:100%"><span>9:41</span><span class="dots">●●● ⌃ ▮</span></div>
+      <div style="color:#eef2f8;font-family:var(--serif);font-size:64px;font-weight:300;margin-top:18px;letter-spacing:-.02em">9:41</div>
+      <div style="color:#aeb9cc;font-size:14px;margin-bottom:34px">Tuesday, 14 June</div>
+      <!-- widget -->
+      <div style="width:300px;background:rgba(255,255,255,.09);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:17px 19px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:13px">
+          <span style="color:#e9b765;font-size:11px;letter-spacing:.24em;font-weight:700">CALIBEX</span>
+          <span style="color:#8d99ad;font-size:11px">1 left today</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <div style="text-align:center;flex:1"><div style="color:#5fa775;font-size:18px">✓</div><div style="color:#8d99ad;font-size:10px;margin-top:3px">brk</div></div>
+          <div style="text-align:center;flex:1"><div style="color:#5fa775;font-size:18px">✓</div><div style="color:#8d99ad;font-size:10px;margin-top:3px">lun</div></div>
+          <div style="text-align:center;flex:1"><div style="color:#5fa775;font-size:18px">✓</div><div style="color:#8d99ad;font-size:10px;margin-top:3px">aft</div></div>
+          <div style="text-align:center;flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:4px 0"><div style="color:#cdd6e4;font-size:15px">○</div><div style="color:#cdd6e4;font-size:10px;margin-top:3px;font-weight:700">dinner</div></div>
+        </div>
+      </div>
+      <div class="note" style="color:#8d99ad;max-width:260px;margin-top:30px">No notification. It just sits there. The one outlined dot = dinner's still open (neutral, never a red/amber summons). Tap it → straight into the capture. At 4am it forgets today and resets — <b style="color:#c9d3e2">no backlog, ever</b>.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const TOTAL = 4;
+  let cur = 0;
+  const prog = document.getElementById('prog');
+  for(let i=0;i<TOTAL;i++){const s=document.createElement('i');prog.appendChild(s);}
+  const pips = prog.children;
+  function paint(){ for(let i=0;i<TOTAL;i++){pips[i].className = i<cur?'done':(i===cur?'on':'');} }
+
+  function openCapture(){ document.getElementById('cap').classList.add('show'); cur=0; show(0); }
+  function closeCapture(){ document.getElementById('cap').classList.remove('show');
+    setTimeout(()=>{document.getElementById('doneCard').classList.remove('show');
+      document.querySelectorAll('.qcard').forEach(c=>c.className='qcard');
+      document.querySelectorAll('.opt,.chip').forEach(o=>{if(!o.dataset.keep)o.classList.remove('sel')});cur=0;},420); }
+
+  function show(n){
+    document.querySelectorAll('.qcard').forEach(c=>{
+      const i=+c.dataset.card;
+      c.className = 'qcard' + (i===n?' active':(i<n?' left':''));
+    });
+    const b=document.getElementById('backBtn'); if(b) b.style.visibility = n>0?'visible':'hidden';
+    paint();
+  }
+  function goBack(){ if(cur>0){ cur--; show(cur); } }
+  function next(n){
+    if(n>=TOTAL-1){ finish(); return; }
+    cur=n+1; show(cur);
+  }
+  function answer(el,n){
+    el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+    el.classList.add('sel');
+    setTimeout(()=>next(n),230);
+  }
+  function pick(el){ el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); }
+  function finish(){
+    document.querySelectorAll('.qcard').forEach(c=>c.classList.add('left'));
+    for(let i=0;i<TOTAL;i++)pips[i].className='done';
+    document.getElementById('doneCard').classList.add('show');
+    setTimeout(()=>{ closeCapture();
+      const dq=document.querySelector('.trow.open');
+      if(dq){dq.className='trow done';dq.querySelector('.t').textContent='just now';dq.removeAttribute('onclick');const g=dq.querySelector('.go');if(g)g.remove();}
+    },1500);
+  }
+</script>
+</body>
+</html>
